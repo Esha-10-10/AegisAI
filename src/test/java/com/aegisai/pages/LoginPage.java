@@ -3,6 +3,8 @@ package com.aegisai.pages;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
+import com.aegisai.agents.selfhealing.LocatorInfo;
+import com.aegisai.agents.selfhealing.SmartElementFinder;
 import com.aegisai.utils.LoggerUtil;
 
 public class LoginPage {
@@ -13,6 +15,8 @@ public class LoginPage {
 
         this.driver = driver;
     }
+
+    // Locators
 
     private By username =
             By.name("username");
@@ -25,6 +29,8 @@ public class LoginPage {
 
     private By errorMessage =
             By.className("error");
+
+    // Positive Login
 
     public HomePage login(
             String user,
@@ -42,10 +48,30 @@ public class LoginPage {
         driver.findElement(password)
                 .sendKeys(pass);
 
+        // Backup Locators For Self Healing
+
+        LocatorInfo loginButtonBackup =
+                new LocatorInfo(
+
+                        null,
+
+                        null,
+
+                        "input.button",
+
+                        "//input[@value='Log In']");
+
         LoggerUtil.logger.info(
                 "Clicking Login Button");
 
-        driver.findElement(loginBtn)
+        SmartElementFinder.find(
+
+                driver,
+
+                loginBtn,
+
+                loginButtonBackup)
+
                 .click();
 
         LoggerUtil.logger.info(
@@ -53,6 +79,8 @@ public class LoginPage {
 
         return new HomePage(driver);
     }
+
+    // Negative Login
 
     public void invalidLogin(
             String user,
@@ -67,7 +95,25 @@ public class LoginPage {
         driver.findElement(password)
                 .sendKeys(pass);
 
-        driver.findElement(loginBtn)
+        LocatorInfo loginButtonBackup =
+                new LocatorInfo(
+
+                        null,
+
+                        null,
+
+                        "input.button",
+
+                        "//input[@value='Log In']");
+
+        SmartElementFinder.find(
+
+                driver,
+
+                loginBtn,
+
+                loginButtonBackup)
+
                 .click();
 
         LoggerUtil.logger.info(
@@ -76,7 +122,8 @@ public class LoginPage {
 
     public String getErrorMessage() {
 
-        return driver.findElement(errorMessage)
+        return driver.findElement(
+                errorMessage)
                 .getText();
     }
-}
+}s
